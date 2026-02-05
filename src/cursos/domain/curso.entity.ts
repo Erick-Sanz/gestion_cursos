@@ -7,6 +7,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { ICurso } from './interfaces/curso.interface';
 import { Estudiante } from '../../estudiantes/domain/estudiante.entity';
@@ -35,4 +36,7 @@ export class Curso implements ICurso {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

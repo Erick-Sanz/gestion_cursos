@@ -166,12 +166,21 @@ Características:
 
 **Nota**: Todos los módulos tienen endpoints REST versionados con el prefijo `/api/v1/`
 
-#### Obtener todos los estudiantes con filtros
+---
+
+#### 🎓 Estudiantes
+
+**Listar estudiantes con filtros**
 ```bash
-GET http://localhost:8000/api/v1/estudiantes?nombre=Juan&limit=10&offset=0
+GET http://localhost:8000/api/v1/estudiantes?nombre=Juan&apellido=Perez&limit=10&offset=0
 ```
 
-#### Crear un estudiante
+**Obtener estudiante por ID**
+```bash
+GET http://localhost:8000/api/v1/estudiantes/{id}
+```
+
+**Crear estudiante**
 ```bash
 POST http://localhost:8000/api/v1/estudiantes
 Content-Type: application/json
@@ -181,11 +190,27 @@ Content-Type: application/json
   "apellido": "Rodriguez",
   "email": "carlos@example.com",
   "fechaNacimiento": "2001-03-15",
-  "telefono": "555-1234"
+  "telefono": "5551234"
 }
 ```
 
-#### Inscribir estudiante en curso
+**Actualizar estudiante**
+```bash
+PATCH http://localhost:8000/api/v1/estudiantes/{id}
+Content-Type: application/json
+
+{
+  "telefono": "5555678",
+  "email": "carlos.nuevo@example.com"
+}
+```
+
+**Eliminar estudiante**
+```bash
+DELETE http://localhost:8000/api/v1/estudiantes/{id}
+```
+
+**Inscribir estudiante en curso**
 ```bash
 POST http://localhost:8000/api/v1/estudiantes/{estudianteId}/inscripciones
 Content-Type: application/json
@@ -195,7 +220,21 @@ Content-Type: application/json
 }
 ```
 
-#### Crear un curso
+---
+
+#### 📚 Cursos
+
+**Listar cursos con filtros**
+```bash
+GET http://localhost:8000/api/v1/cursos?nombre=Matemáticas&categoriaId=uuid-categoria&limit=10&offset=0
+```
+
+**Obtener curso por ID**
+```bash
+GET http://localhost:8000/api/v1/cursos/{id}
+```
+
+**Crear curso**
 ```bash
 POST http://localhost:8000/api/v1/cursos
 Content-Type: application/json
@@ -206,31 +245,139 @@ Content-Type: application/json
 }
 ```
 
-#### Obtener todas las categorías
+**Actualizar curso**
+```bash
+PATCH http://localhost:8000/api/v1/cursos/{id}
+Content-Type: application/json
+
+{
+  "nombre": "Matemáticas Avanzadas II"
+}
+```
+
+**Eliminar curso**
+```bash
+DELETE http://localhost:8000/api/v1/cursos/{id}
+```
+
+---
+
+#### 🏷️ Categorías
+
+**Listar todas las categorías**
 ```bash
 GET http://localhost:8000/api/v1/categorias
 ```
 
+**Obtener categoría por ID**
+```bash
+GET http://localhost:8000/api/v1/categorias/{id}
+```
+
+**Crear categoría**
+```bash
+POST http://localhost:8000/api/v1/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Tecnología"
+}
+```
+
+**Eliminar categoría**
+```bash
+DELETE http://localhost:8000/api/v1/categorias/{id}
+```
+
+---
+
 ### GraphQL
 
-**Nota**: Cursos y Categorías solo están disponibles mediante GraphQL.
+Accede al playground en `http://localhost:8000/graphql`
 
-#### Consultar categorías
+---
 
-#### Consultar categorías
+#### 🎓 Estudiantes (GraphQL)
+
+**Consultar estudiantes con filtros**
 ```graphql
 query {
-  categorias {
+  estudiantes(nombre: "Juan", apellido: "Perez", limit: 10, offset: 0) {
     id
     nombre
+    apellido
+    email
+    fechaNacimiento
+    telefono
+    cursos {
+      id
+      nombre
+      categoria {
+        id
+        nombre
+      }
+    }
   }
 }
 ```
 
-#### Consultar cursos con categoría
+**Consultar estudiante por ID**
 ```graphql
 query {
-  cursos(limit: 10, categoriaId: "uuid-aqui") {
+  estudiante(id: "uuid-estudiante") {
+    id
+    nombre
+    apellido
+    email
+    cursos {
+      nombre
+    }
+  }
+}
+```
+
+**Crear estudiante**
+```graphql
+mutation {
+  createStudent(input: {
+    nombre: "Carlos"
+    apellido: "Rodriguez"
+    email: "carlos@example.com"
+    fechaNacimiento: "2001-03-15"
+    telefono: "555-1234"
+  }) {
+    id
+    nombre
+    apellido
+    email
+  }
+}
+```
+
+**Inscribir estudiante en curso**
+```graphql
+mutation {
+  inscribirEstudiante(
+    estudianteId: "uuid-estudiante"
+    cursoId: "uuid-curso"
+  ) {
+    id
+    nombre
+    cursos {
+      nombre
+    }
+  }
+}
+```
+
+---
+
+#### 📚 Cursos (GraphQL)
+
+**Consultar cursos con filtros**
+```graphql
+query {
+  cursos(nombre: "Matemáticas", categoriaId: "uuid-categoria", limit: 10) {
     id
     nombre
     categoria {
@@ -245,28 +392,70 @@ query {
 }
 ```
 
-#### Crear categoría
+**Consultar curso por ID**
+```graphql
+query {
+  curso(id: "uuid-curso") {
+    id
+    nombre
+    categoria {
+      nombre
+    }
+    estudiantes {
+      nombre
+      apellido
+      email
+    }
+  }
+}
+```
+
+**Crear curso**
 ```graphql
 mutation {
-  createCategoria(input: { nombre: "Tecnología" }) {
+  createCurso(input: {
+    nombre: "Matemáticas Avanzadas"
+    categoriaId: "uuid-de-categoria"
+  }) {
+    id
+    nombre
+    categoria {
+      nombre
+    }
+  }
+}
+```
+
+---
+
+#### 🏷️ Categorías (GraphQL)
+
+**Consultar todas las categorías**
+```graphql
+query {
+  categorias {
     id
     nombre
   }
 }
 ```
 
-#### Inscribir estudiante en curso
+**Consultar categoría por ID**
 ```graphql
-mutation {
-  inscribirEstudiante(
-    estudianteId: "uuid-estudiante"
-    cursoId: "uuid-curso"
-  ) {
+query {
+  categoria(id: "uuid-categoria") {
     id
     nombre
-    cursos {
-      nombre
-    }
+  }
+}
+```
+
+**Crear categoría**
+```graphql
+mutation {
+  createCategoria(input: { nombre: "Tecnología" }) {
+    id
+    nombre
   }
 }
 ```

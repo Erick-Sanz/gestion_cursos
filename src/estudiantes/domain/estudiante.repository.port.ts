@@ -6,6 +6,7 @@ export abstract class EstudianteRepositoryPort {
   abstract findAllWithCursos(args?: FindEstudiantesArgs): Promise<Estudiante[]>;
   abstract findById(id: string): Promise<Estudiante | null>;
   abstract findByEmail(email: string): Promise<Estudiante | null>;
+  abstract findByTelefono(telefono: string): Promise<Estudiante | null>;
   abstract create(data: Partial<Estudiante>): Promise<Estudiante>;
   abstract update(id: string, data: Partial<Estudiante>): Promise<Estudiante>;
   abstract delete(id: string): Promise<void>;

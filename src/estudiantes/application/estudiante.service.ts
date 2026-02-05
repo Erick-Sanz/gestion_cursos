@@ -32,17 +32,39 @@ export class EstudianteService {
   }
 
   async create(dto: CreateEstudianteDto): Promise<Estudiante> {
-    // Validar que el email no esté registrado
+
     const existingEstudiante = await this.repository.findByEmail(dto.email);
     if (existingEstudiante) {
       throw new BadRequestException(`El correo ${dto.email} ya está registrado`);
+    }
+
+    if (dto?.telefono) {
+      const existingTelefono = await this.repository.findByTelefono(dto.telefono);
+      if (existingTelefono) {
+        throw new BadRequestException(`El teléfono ${dto.telefono} ya está registrado`);
+      }
     }
 
     return this.repository.create(dto);
   }
 
   async update(id: string, dto: UpdateEstudianteDto): Promise<Estudiante> {
-    await this.findById(id);
+    const estudiante = await this.findById(id);
+
+    if (dto.email && dto.email !== estudiante.email) {
+      const existingEstudiante = await this.repository.findByEmail(dto.email);
+      if (existingEstudiante) {
+        throw new BadRequestException(`El correo ${dto.email} ya está registrado por otro estudiante`);
+      }
+    }
+
+    if (dto.telefono && dto.telefono !== estudiante.telefono) {
+      const existingTelefono = await this.repository.findByTelefono(dto.telefono);
+      if (existingTelefono) {
+        throw new BadRequestException(`El teléfono ${dto.telefono} ya está registrado por otro estudiante`);
+      }
+    }
+
     return this.repository.update(id, dto);
   }
 
@@ -73,7 +95,6 @@ export class EstudianteService {
         throw new NotFoundException(`Estudiante con id ${estudianteId} no encontrado`);
       }
 
-      // Cargar los cursos del estudiante después del bloqueo
       const estudianteConCursos = await queryRunner.manager.findOne(Estudiante, {
         where: { id: estudianteId },
         relations: ['cursos'],

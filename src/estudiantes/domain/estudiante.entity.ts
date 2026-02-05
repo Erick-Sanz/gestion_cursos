@@ -4,6 +4,7 @@ import {
   Column,
   ManyToMany,
   JoinTable,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Curso } from '../../cursos/domain/curso.entity';
 import { IEstudiante } from './interfaces/estudiante.interface';
@@ -27,6 +28,9 @@ export class Estudiante implements IEstudiante {
 
   @Column({ nullable: true })
   telefono: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @ManyToMany(() => Curso, (curso) => curso.estudiantes)
   @JoinTable({

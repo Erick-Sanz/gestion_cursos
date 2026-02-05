@@ -47,6 +47,10 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
     return this.repo.findOne({ where: { email } });
   }
 
+  async findByTelefono(telefono: string): Promise<Estudiante | null> {
+    return this.repo.findOne({ where: { telefono } });
+  }
+
   async create(data: Partial<Estudiante>): Promise<Estudiante> {
     const estudiante = this.repo.create(data);
     return this.repo.save(estudiante);
@@ -58,7 +62,7 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
   }
 
   async delete(id: string): Promise<void> {
-    await this.repo.delete(id);
+    await this.repo.softDelete(id);
   }
 
   async addCurso(estudianteId: string, cursoId: string): Promise<Estudiante> {

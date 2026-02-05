@@ -24,12 +24,12 @@ export class SeedService implements OnModuleInit {
 
         console.log('Iniciando seeding de datos de ejemplo...');
 
-        // Seed categories first
+  
         const cienciasExactas = await this.categoriaService.create('Ciencias Exactas');
         const tecnologia = await this.categoriaService.create('Tecnología');
         const humanidades = await this.categoriaService.create('Humanidades');
 
-        // Seed courses with category IDs
+
         await this.cursoService.create({
             nombre: 'Matemáticas Avanzadas',
             categoriaId: cienciasExactas.id,

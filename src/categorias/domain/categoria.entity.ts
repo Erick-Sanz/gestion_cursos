@@ -4,6 +4,7 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
     OneToMany,
 } from 'typeorm';
 import { ICategoria } from './interfaces/categoria.interface';
@@ -25,4 +26,7 @@ export class Categoria implements ICategoria {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
