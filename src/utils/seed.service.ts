@@ -22,9 +22,9 @@ export class SeedService implements OnModuleInit {
 
         console.log('Iniciando seeding de datos de ejemplo...');
 
-        const curso1 = await this.cursoService.create({ nombre: 'Matemáticas Avanzadas' });
-        const curso2 = await this.cursoService.create({ nombre: 'Programación en NestJS' });
-        const curso3 = await this.cursoService.create({ nombre: 'Bases de Datos' });
+        await this.cursoService.create({ nombre: 'Matemáticas Avanzadas' });
+        await this.cursoService.create({ nombre: 'Programación en NestJS' });
+        await this.cursoService.create({ nombre: 'Bases de Datos' });
 
         await this.estudianteService.create({
             nombre: 'Juan',

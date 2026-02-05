@@ -32,4 +32,12 @@ export class EstudianteResolver {
   ): Promise<Estudiante> {
     return this.estudianteService.create(input);
   }
+
+  @Mutation(() => EstudianteType)
+  async inscribirEstudiante(
+    @Args('estudianteId', { type: () => ID }) estudianteId: string,
+    @Args('cursoId', { type: () => ID }) cursoId: string,
+  ): Promise<Estudiante> {
+    return this.estudianteService.inscribir(estudianteId, cursoId);
+  }
 }

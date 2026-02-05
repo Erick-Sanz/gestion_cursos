@@ -21,7 +21,7 @@ import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 @ApiTags('Estudiantes')
 @Controller('estudiantes')
 export class EstudianteController {
-  constructor(private readonly estudianteService: EstudianteService) {}
+  constructor(private readonly estudianteService: EstudianteService) { }
 
   @Get()
   @ApiOperation({ summary: 'Obtener todos los estudiantes' })
@@ -71,7 +71,16 @@ export class EstudianteController {
     description: 'Estudiante eliminado exitosamente',
   })
   @ApiResponse({ status: 404, description: 'Estudiante no encontrado' })
-  delete(@Param('id', ParseUUIDPipe) id: string) {
+  remove(@Param('id') id: string) {
     return this.estudianteService.delete(id);
+  }
+
+  @Post(':id/inscribir/:cursoId')
+  @ApiOperation({ summary: 'Inscribir un estudiante a un curso' })
+  inscribir(
+    @Param('id') id: string,
+    @Param('cursoId') cursoId: string,
+  ) {
+    return this.estudianteService.inscribir(id, cursoId);
   }
 }

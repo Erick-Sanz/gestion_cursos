@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { EstudianteRepositoryPort } from '../domain/estudiante.repository.port';
 import { Estudiante } from '../domain/estudiante.entity';
 import { CreateEstudianteDto } from '../infrastructure/dto/create-estudiante.dto';
@@ -40,12 +40,11 @@ export class EstudianteService {
 
   async inscribir(estudianteId: string, cursoId: string): Promise<Estudiante> {
     const estudiante = await this.findById(estudianteId);
-    if (!estudiante) {
-      throw new NotFoundException(`Estudiante ${estudianteId} no encontrado`);
+
+    if (estudiante.cursos?.some(curso => curso.id === cursoId)) {
+      throw new BadRequestException(`Estudiante ${estudianteId} ya inscrito en el curso ${cursoId}`);
     }
-    // We trust the repository to handle the relationship update, 
-    // but ideally we should also check if the course exists here or in the repo.
-    // For simplicity following the plan, delegate to repository.
+
     return this.repository.addCurso(estudianteId, cursoId);
   }
 }

@@ -45,7 +45,6 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
       throw new Error(`Estudiante ${estudianteId} no encontrado`);
     }
 
-    // TypeORM way to update ManyToMany
     await this.repo
       .createQueryBuilder()
       .relation(Estudiante, 'cursos')
