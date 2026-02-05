@@ -5,11 +5,13 @@ import { Estudiante } from '../domain/estudiante.entity';
 import { CreateEstudianteDto } from '../infrastructure/dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from '../infrastructure/dto/update-estudiante.dto';
 import { FindEstudiantesArgs } from '../infrastructure/dto/find-estudiantes.args';
+import { CursoRepositoryPort } from 'src/cursos/domain/curso.repository.port';
 
 @Injectable()
 export class EstudianteService {
   constructor(
     private readonly repository: EstudianteRepositoryPort,
+    private readonly cursoRepository: CursoRepositoryPort,
     private readonly dataSource: DataSource,
   ) { }
 
@@ -50,17 +52,19 @@ export class EstudianteService {
   }
 
   async inscribir(estudianteId: string, cursoId: string): Promise<Estudiante> {
+
+    const curso = await this.cursoRepository.findById(cursoId);
+    if (!curso) {
+      throw new NotFoundException(`Ese curso no existe`);
+    }
+
     const queryRunner = this.dataSource.createQueryRunner();
-
     await queryRunner.connect();
-
     await queryRunner.startTransaction('SERIALIZABLE');
-
     try {
 
       const estudiante = await queryRunner.manager
         .createQueryBuilder(Estudiante, 'estudiante')
-        .leftJoinAndSelect('estudiante.cursos', 'cursos')
         .where('estudiante.id = :id', { id: estudianteId })
         .setLock('pessimistic_write')
         .getOne();
@@ -69,8 +73,13 @@ export class EstudianteService {
         throw new NotFoundException(`Estudiante con id ${estudianteId} no encontrado`);
       }
 
+      // Cargar los cursos del estudiante después del bloqueo
+      const estudianteConCursos = await queryRunner.manager.findOne(Estudiante, {
+        where: { id: estudianteId },
+        relations: ['cursos'],
+      });
 
-      if (estudiante.cursos?.some(curso => curso.id === cursoId)) {
+      if (estudianteConCursos?.cursos?.some(curso => curso.id === cursoId)) {
         throw new BadRequestException(`Este estudiante ya esta inscrito en el curso`);
       }
 

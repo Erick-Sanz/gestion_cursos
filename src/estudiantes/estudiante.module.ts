@@ -6,9 +6,12 @@ import { EstudianteTypeormRepository } from './infrastructure/estudiante.typeorm
 import { EstudianteService } from './application/estudiante.service';
 import { EstudianteController } from './infrastructure/estudiante.controller';
 import { EstudianteResolver } from './infrastructure/graphql/estudiante.resolver';
+import { CursoRepositoryPort } from 'src/cursos/domain/curso.repository.port';
+import { CursoTypeormRepository } from 'src/cursos/infrastructure/curso.typeorm-repository';
+import { Curso } from 'src/cursos/domain/curso.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Estudiante])],
+  imports: [TypeOrmModule.forFeature([Estudiante, Curso])],
   controllers: [EstudianteController],
   providers: [
     EstudianteService,
@@ -16,8 +19,12 @@ import { EstudianteResolver } from './infrastructure/graphql/estudiante.resolver
       provide: EstudianteRepositoryPort,
       useClass: EstudianteTypeormRepository,
     },
+    {
+      provide: CursoRepositoryPort,
+      useClass: CursoTypeormRepository,
+    },
     EstudianteResolver,
   ],
   exports: [EstudianteService],
 })
-export class EstudianteModule {}
+export class EstudianteModule { }

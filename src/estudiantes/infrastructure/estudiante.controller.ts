@@ -18,6 +18,7 @@ import {
 import { EstudianteService } from '../application/estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
+import { InscribirEstudianteDto } from './dto/inscribir-estudiante.dto';
 import { FindEstudiantesArgs } from './dto/find-estudiantes.args';
 
 @ApiTags('Estudiantes')
@@ -77,12 +78,19 @@ export class EstudianteController {
     return this.estudianteService.delete(id);
   }
 
-  @Post(':id/inscribir/:cursoId')
+  @Post(':id/inscripciones')
   @ApiOperation({ summary: 'Inscribir un estudiante a un curso' })
+  @ApiParam({ name: 'id', description: 'UUID del estudiante' })
+  @ApiResponse({
+    status: 201,
+    description: 'Estudiante inscrito exitosamente',
+  })
+  @ApiResponse({ status: 404, description: 'Estudiante o curso no encontrado' })
+  @ApiResponse({ status: 400, description: 'El estudiante ya está inscrito en el curso' })
   inscribir(
-    @Param('id') id: string,
-    @Param('cursoId') cursoId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: InscribirEstudianteDto,
   ) {
-    return this.estudianteService.inscribir(id, cursoId);
+    return this.estudianteService.inscribir(id, dto.cursoId);
   }
 }

@@ -187,7 +187,12 @@ Content-Type: application/json
 
 #### Inscribir estudiante en curso
 ```bash
-POST http://localhost:8000/api/v1/estudiantes/{estudianteId}/inscribir/{cursoId}
+POST http://localhost:8000/api/v1/estudiantes/{estudianteId}/inscripciones
+Content-Type: application/json
+
+{
+  "cursoId": "uuid-del-curso"
+}
 ```
 
 #### Crear un curso
