@@ -43,6 +43,10 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
     return this.repo.findOne({ where: { id }, relations: ['cursos'] });
   }
 
+  async findByEmail(email: string): Promise<Estudiante | null> {
+    return this.repo.findOne({ where: { email } });
+  }
+
   async create(data: Partial<Estudiante>): Promise<Estudiante> {
     const estudiante = this.repo.create(data);
     return this.repo.save(estudiante);

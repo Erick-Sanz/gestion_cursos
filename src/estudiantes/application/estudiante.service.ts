@@ -30,6 +30,12 @@ export class EstudianteService {
   }
 
   async create(dto: CreateEstudianteDto): Promise<Estudiante> {
+    // Validar que el email no esté registrado
+    const existingEstudiante = await this.repository.findByEmail(dto.email);
+    if (existingEstudiante) {
+      throw new BadRequestException(`El correo ${dto.email} ya está registrado`);
+    }
+
     return this.repository.create(dto);
   }
 
@@ -47,7 +53,7 @@ export class EstudianteService {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
-   
+
     await queryRunner.startTransaction('SERIALIZABLE');
 
     try {
@@ -63,7 +69,7 @@ export class EstudianteService {
         throw new NotFoundException(`Estudiante con id ${estudianteId} no encontrado`);
       }
 
- 
+
       if (estudiante.cursos?.some(curso => curso.id === cursoId)) {
         throw new BadRequestException(`Este estudiante ya esta inscrito en el curso`);
       }
@@ -75,7 +81,7 @@ export class EstudianteService {
         .of(estudianteId)
         .add(cursoId);
 
-    
+
       await queryRunner.commitTransaction();
 
       return await this.findById(estudianteId);

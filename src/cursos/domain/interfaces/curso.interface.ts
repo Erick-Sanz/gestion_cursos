@@ -4,5 +4,5 @@ export interface ICurso {
     id: string;
     nombre: string;
     categoriaId: string;
-    estudiantes?: any[];
+    estudiantes?: Estudiante[];
 }
