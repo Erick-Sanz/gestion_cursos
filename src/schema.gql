@@ -1,0 +1,43 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type EstudianteType {
+  id: ID!
+  nombre: String!
+  apellido: String!
+  email: String!
+  fechaNacimiento: String!
+  telefono: String
+  cursos: [CursoType!]!
+}
+
+type CursoType {
+  id: ID!
+  nombre: String!
+  estudiantes: [EstudianteType!]!
+}
+
+type Query {
+  estudiantes: [EstudianteType!]!
+  estudiante(id: ID!): EstudianteType!
+  cursos: [CursoType!]!
+  curso(id: ID!): CursoType!
+}
+
+type Mutation {
+  createStudent(input: CreateEstudianteDto!): EstudianteType!
+  createCurso(input: CreateCursoDto!): CursoType!
+}
+
+input CreateEstudianteDto {
+  nombre: String!
+  apellido: String!
+  email: String!
+  fechaNacimiento: String!
+  telefono: String
+}
+
+input CreateCursoDto {
+  nombre: String!
+}
