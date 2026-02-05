@@ -18,7 +18,7 @@ import {
 import { EstudianteService } from '../application/estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { FindEstudiantesArgs } from './dto/find-estudiantes.args';
 
 @ApiTags('Estudiantes')
 @Controller('estudiantes')
@@ -28,8 +28,8 @@ export class EstudianteController {
   @Get()
   @ApiOperation({ summary: 'Obtener todos los estudiantes' })
   @ApiResponse({ status: 200, description: 'Lista de estudiantes' })
-  findAll(@Query() pagination: PaginationDto) {
-    return this.estudianteService.findAll(pagination);
+  findAll(@Query() args: FindEstudiantesArgs) {
+    return this.estudianteService.findAll(args);
   }
 
   @Get(':id')

@@ -5,4 +5,5 @@ export abstract class CategoriaRepositoryPort {
     abstract findById(id: string): Promise<Categoria | null>;
     abstract findByNombre(nombre: string): Promise<Categoria | null>;
     abstract create(nombre: string): Promise<Categoria>;
+    abstract delete(id: string): Promise<void>;
 }

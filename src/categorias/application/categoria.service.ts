@@ -25,4 +25,9 @@ export class CategoriaService {
     async create(nombre: string): Promise<Categoria> {
         return this.repository.create(nombre);
     }
+
+    async delete(id: string): Promise<void> {
+        await this.findById(id);
+        return this.repository.delete(id);
+    }
 }

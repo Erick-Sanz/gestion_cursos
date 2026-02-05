@@ -5,6 +5,7 @@ import { Curso } from '../domain/curso.entity';
 import { CursoRepositoryPort } from '../domain/curso.repository.port';
 import { FindCursosArgs } from './dto/find-cursos.args';
 import { CreateCursoDto } from './dto/create-curso.dto';
+import { UpdateCursoDto } from './dto/update-curso.dto';
 
 @Injectable()
 export class CursoTypeormRepository extends CursoRepositoryPort {
@@ -48,5 +49,18 @@ export class CursoTypeormRepository extends CursoRepositoryPort {
   async create(dto: CreateCursoDto): Promise<Curso> {
     const curso = this.repo.create(dto);
     return this.repo.save(curso);
+  }
+
+  async update(id: string, dto: UpdateCursoDto): Promise<Curso> {
+    await this.repo.update(id, dto);
+    const updated = await this.findById(id);
+    if (!updated) {
+      throw new Error(`Curso con id ${id} no encontrado después de actualizar`);
+    }
+    return updated;
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.delete(id);
   }
 }

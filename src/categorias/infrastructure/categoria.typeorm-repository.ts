@@ -29,4 +29,8 @@ export class CategoriaTypeormRepository extends CategoriaRepositoryPort {
         const categoria = this.repo.create({ nombre });
         return this.repo.save(categoria);
     }
+
+    async delete(id: string): Promise<void> {
+        await this.repo.delete(id);
+    }
 }
