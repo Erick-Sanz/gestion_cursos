@@ -93,18 +93,6 @@ npm install
 
 Crear archivo `.env` en la raíz del proyecto:
 
-```env
-# Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=tu_password
-DB_DATABASE=gestion_cursos
-
-# Application
-PORT=3000
-NODE_ENV=development
-```
 
 4. **Crear la base de datos**
 ```bash
@@ -377,7 +365,7 @@ mutation {
 **Consultar cursos con filtros**
 ```graphql
 query {
-  cursos(nombre: "Matemáticas", categoriaId: "uuid-categoria", limit: 10) {
+  cursos(nombre: "Matemáticas", limit: 10) {
     id
     nombre
     categoria {

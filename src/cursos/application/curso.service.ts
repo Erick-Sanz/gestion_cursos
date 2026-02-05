@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CursoRepositoryPort } from '../domain/curso.repository.port';
 import { Curso } from '../domain/curso.entity';
 import { CreateCursoDto } from '../infrastructure/dto/create-curso.dto';
@@ -26,11 +26,24 @@ export class CursoService {
   }
 
   async create(dto: CreateCursoDto): Promise<Curso> {
+    const existingCurso = await this.repository.findByNombre(dto.nombre);
+    if (existingCurso) {
+      throw new BadRequestException(`El curso "${dto.nombre}" ya existe`);
+    }
+
     return this.repository.create(dto);
   }
 
   async update(id: string, dto: UpdateCursoDto): Promise<Curso> {
-    await this.findById(id);
+    const curso = await this.findById(id);
+
+    if (dto.nombre && dto.nombre !== curso.nombre) {
+      const existingCurso = await this.repository.findByNombre(dto.nombre);
+      if (existingCurso) {
+        throw new BadRequestException(`El curso "${dto.nombre}" ya existe`);
+      }
+    }
+
     return this.repository.update(id, dto);
   }
 

@@ -33,14 +33,14 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
         nombre: nombre ? ILike(`%${nombre}%`) : undefined,
         apellido: apellido ? ILike(`%${apellido}%`) : undefined,
       },
-      relations: ['cursos'],
+      relations: ['cursos', 'cursos.categoria'],
       skip: offset,
       take: limit,
     });
   }
 
   async findById(id: string): Promise<Estudiante | null> {
-    return this.repo.findOne({ where: { id }, relations: ['cursos'] });
+    return this.repo.findOne({ where: { id }, relations: ['cursos', 'cursos.categoria'] });
   }
 
   async findByEmail(email: string): Promise<Estudiante | null> {

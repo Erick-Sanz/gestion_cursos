@@ -7,6 +7,7 @@ export abstract class CursoRepositoryPort {
   abstract findAll(args?: FindCursosArgs): Promise<Curso[]>;
   abstract findAllWithEstudiantes(args?: FindCursosArgs): Promise<Curso[]>;
   abstract findById(id: string): Promise<Curso | null>;
+  abstract findByNombre(nombre: string): Promise<Curso | null>;
   abstract create(dto: CreateCursoDto): Promise<Curso>;
   abstract update(id: string, dto: UpdateCursoDto): Promise<Curso>;
   abstract delete(id: string): Promise<void>;

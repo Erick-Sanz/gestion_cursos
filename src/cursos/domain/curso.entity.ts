@@ -18,7 +18,7 @@ export class Curso implements ICurso {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   nombre: string;
 
   @Column()

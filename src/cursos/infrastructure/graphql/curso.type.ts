@@ -9,6 +9,6 @@ export class CursoType {
   @Field()
   nombre: string;
 
-  @Field(() => CategoriaType)
+  @Field(() => CategoriaType, { nullable: true })
   categoria: CategoriaType;
 }
