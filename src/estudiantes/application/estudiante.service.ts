@@ -3,17 +3,18 @@ import { EstudianteRepositoryPort } from '../domain/estudiante.repository.port';
 import { Estudiante } from '../domain/estudiante.entity';
 import { CreateEstudianteDto } from '../infrastructure/dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from '../infrastructure/dto/update-estudiante.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class EstudianteService {
   constructor(private readonly repository: EstudianteRepositoryPort) { }
 
-  async findAll(): Promise<Estudiante[]> {
-    return this.repository.findAll();
+  async findAll(pagination?: PaginationDto): Promise<Estudiante[]> {
+    return this.repository.findAll(pagination);
   }
 
-  async findAllWithCursos(): Promise<Estudiante[]> {
-    return this.repository.findAllWithCursos();
+  async findAllWithCursos(pagination?: PaginationDto): Promise<Estudiante[]> {
+    return this.repository.findAllWithCursos(pagination);
   }
 
   async findById(id: string): Promise<Estudiante> {
@@ -42,7 +43,7 @@ export class EstudianteService {
     const estudiante = await this.findById(estudianteId);
 
     if (estudiante.cursos?.some(curso => curso.id === cursoId)) {
-      throw new BadRequestException(`Estudiante ${estudianteId} ya inscrito en el curso ${cursoId}`);
+      throw new BadRequestException(`Este estudiante ya esta inscrito en el curso`);
     }
 
     return this.repository.addCurso(estudianteId, cursoId);

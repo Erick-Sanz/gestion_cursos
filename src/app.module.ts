@@ -20,6 +20,15 @@ import { SeedModule } from './utils/seed.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
+      formatError: (error) => {
+        const graphQLFormattedError = {
+          message: error.message,
+          code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+          statusCode: error.extensions?.originalError?.['statusCode'] || 500,
+          timestamp: new Date().toISOString(),
+        };
+        return graphQLFormattedError;
+      },
     }),
     EstudianteModule,
     CursoModule,

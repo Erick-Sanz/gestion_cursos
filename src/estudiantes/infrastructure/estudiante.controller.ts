@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +18,7 @@ import {
 import { EstudianteService } from '../application/estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 @ApiTags('Estudiantes')
 @Controller('estudiantes')
@@ -26,8 +28,8 @@ export class EstudianteController {
   @Get()
   @ApiOperation({ summary: 'Obtener todos los estudiantes' })
   @ApiResponse({ status: 200, description: 'Lista de estudiantes' })
-  findAll() {
-    return this.estudianteService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.estudianteService.findAll(pagination);
   }
 
   @Get(':id')

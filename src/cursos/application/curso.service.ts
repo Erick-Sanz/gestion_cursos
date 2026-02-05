@@ -2,17 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CursoRepositoryPort } from '../domain/curso.repository.port';
 import { Curso } from '../domain/curso.entity';
 import { CreateCursoDto } from '../infrastructure/dto/create-curso.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class CursoService {
   constructor(private readonly repository: CursoRepositoryPort) { }
 
-  async findAll(): Promise<Curso[]> {
-    return this.repository.findAll();
+  async findAll(pagination?: PaginationDto): Promise<Curso[]> {
+    return this.repository.findAll(pagination);
   }
 
-  async findAllWithEstudiantes(): Promise<Curso[]> {
-    return this.repository.findAllWithEstudiantes();
+  async findAllWithEstudiantes(pagination?: PaginationDto): Promise<Curso[]> {
+    return this.repository.findAllWithEstudiantes(pagination);
   }
 
   async findById(id: string): Promise<Curso> {

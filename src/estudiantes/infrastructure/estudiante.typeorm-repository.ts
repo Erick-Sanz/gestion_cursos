@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Estudiante } from '../domain/estudiante.entity';
 import { EstudianteRepositoryPort } from '../domain/estudiante.repository.port';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 @Injectable()
 export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
@@ -13,12 +14,21 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
     super();
   }
 
-  async findAll(): Promise<Estudiante[]> {
-    return this.repo.find();
+  async findAll(pagination?: PaginationDto): Promise<Estudiante[]> {
+    const { limit = 10, offset = 0 } = pagination || {};
+    return this.repo.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
-  async findAllWithCursos(): Promise<Estudiante[]> {
-    return this.repo.find({ relations: ['cursos'] });
+  async findAllWithCursos(pagination?: PaginationDto): Promise<Estudiante[]> {
+    const { limit = 10, offset = 0 } = pagination || {};
+    return this.repo.find({
+      relations: ['cursos'],
+      skip: offset,
+      take: limit,
+    });
   }
 
   async findById(id: string): Promise<Estudiante | null> {
