@@ -52,7 +52,8 @@ export class CursoTypeormRepository extends CursoRepositoryPort {
 
   async create(dto: CreateCursoDto): Promise<Curso> {
     const curso = this.repo.create(dto);
-    return this.repo.save(curso);
+    const saved = await this.repo.save(curso);
+    return this.repo.findOne({ where: { id: saved.id }, relations: ['categoria'] }) as Promise<Curso>;
   }
 
   async update(id: string, dto: UpdateCursoDto): Promise<Curso> {
