@@ -450,47 +450,69 @@ mutation {
 
 ## 🗄️ Esquema de Base de Datos
 
-### Tablas
+### Estudiantes
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| `id` | UUID | Primary Key |
+| `nombre` | String | Not Null |
+| `apellido` | String | Not Null |
+| `email` | String | **Unique**, Not Null |
+| `fechaNacimiento` | Date | Not Null |
+| `telefono` | String | **Unique**, Nullable |
+| `deletedAt` | Timestamp | Nullable (Soft Delete) |
 
-**categorias**
-- `id` (UUID, PK)
-- `nombre` (VARCHAR, UNIQUE)
-- `createdAt` (TIMESTAMP)
-- `updatedAt` (TIMESTAMP)
+**Relaciones:**
+- Many-to-Many con `Cursos` (tabla intermedia: `estudiantes_cursos`)
 
-**cursos**
-- `id` (UUID, PK)
-- `nombre` (VARCHAR)
-- `categoriaId` (UUID, FK → categorias)
-- `createdAt` (TIMESTAMP)
-- `updatedAt` (TIMESTAMP)
+---
 
-**estudiantes**
-- `id` (UUID, PK)
-- `nombre` (VARCHAR)
-- `apellido` (VARCHAR)
-- `email` (VARCHAR, UNIQUE)
-- `fechaNacimiento` (DATE)
-- `telefono` (VARCHAR)
-- `createdAt` (TIMESTAMP)
-- `updatedAt` (TIMESTAMP)
+### Cursos
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| `id` | UUID | Primary Key |
+| `nombre` | String | **Unique**, Not Null |
+| `categoriaId` | UUID | Foreign Key → Categorías |
+| `createdAt` | Timestamp | Auto-generated |
+| `updatedAt` | Timestamp | Auto-updated |
+| `deletedAt` | Timestamp | Nullable (Soft Delete) |
 
-**estudiante_cursos** (Many-to-Many)
-- `estudianteId` (UUID, FK → estudiantes)
-- `cursoId` (UUID, FK → cursos)
+**Relaciones:**
+- Many-to-One con `Categorías`
+- Many-to-Many con `Estudiantes` (tabla intermedia: `estudiantes_cursos`)
 
-## 🧪 Testing
+---
 
-```bash
-# Unit tests
-npm run test
+### Categorías
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| `id` | UUID | Primary Key |
+| `nombre` | String | **Unique**, Not Null |
+| `createdAt` | Timestamp | Auto-generated |
+| `updatedAt` | Timestamp | Auto-updated |
+| `deletedAt` | Timestamp | Nullable (Soft Delete) |
 
-# E2E tests
-npm run test:e2e
+**Relaciones:**
+- One-to-Many con `Cursos`
 
-# Test coverage
-npm run test:cov
-```
+---
+
+### Estudiantes_Cursos (Tabla de relación)
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| `estudiante_id` | UUID | Foreign Key → Estudiantes |
+| `curso_id` | UUID | Foreign Key → Cursos |
+
+**Clave Primaria Compuesta:** (`estudiante_id`, `curso_id`)
+
+---
+
+### 🔒 Características de Seguridad de Datos
+
+- **Soft Delete**: Todos los registros eliminados se marcan con `deletedAt` en lugar de eliminarse físicamente
+- **Unique Constraints**: Email y teléfono de estudiantes, nombres de cursos y categorías son únicos
+- **Concurrency Control**: Transacciones con nivel de aislamiento SERIALIZABLE y bloqueos pesimistas en operaciones críticas
+- **Validaciones**: Email y teléfono únicos con validación en creación y actualización
+
 
 ## 🌱 Seeding
 
@@ -523,7 +545,6 @@ Para reiniciar los datos, elimina la base de datos y vuelve a crearla.
 ```bash
 npm run start          # Iniciar en modo normal
 npm run start:dev      # Iniciar en modo desarrollo (watch)
-npm run start:prod     # Iniciar en modo producción
 npm run build          # Compilar el proyecto
 npm run format         # Formatear código con Prettier
 npm run lint           # Ejecutar ESLint
@@ -537,14 +558,4 @@ npm run lint           # Ejecutar ESLint
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT.
-
-## 👥 Autor
-
-Desarrollado como proyecto académico de gestión de cursos.
-
-## 📞 Soporte
-
-Para reportar problemas o solicitar características, abre un issue en el repositorio.
