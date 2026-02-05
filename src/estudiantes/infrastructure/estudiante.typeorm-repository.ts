@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Estudiante } from '../domain/estudiante.entity';
 import { EstudianteRepositoryPort } from '../domain/estudiante.repository.port';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { FindEstudiantesArgs } from './dto/find-estudiantes.args';
 
 @Injectable()
 export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
@@ -14,17 +14,25 @@ export class EstudianteTypeormRepository extends EstudianteRepositoryPort {
     super();
   }
 
-  async findAll(pagination?: PaginationDto): Promise<Estudiante[]> {
-    const { limit = 10, offset = 0 } = pagination || {};
+  async findAll(args?: FindEstudiantesArgs): Promise<Estudiante[]> {
+    const { limit = 10, offset = 0, nombre, apellido } = args || {};
     return this.repo.find({
+      where: {
+        nombre: nombre ? ILike(`%${nombre}%`) : undefined,
+        apellido: apellido ? ILike(`%${apellido}%`) : undefined,
+      },
       skip: offset,
       take: limit,
     });
   }
 
-  async findAllWithCursos(pagination?: PaginationDto): Promise<Estudiante[]> {
-    const { limit = 10, offset = 0 } = pagination || {};
+  async findAllWithCursos(args?: FindEstudiantesArgs): Promise<Estudiante[]> {
+    const { limit = 10, offset = 0, nombre, apellido } = args || {};
     return this.repo.find({
+      where: {
+        nombre: nombre ? ILike(`%${nombre}%`) : undefined,
+        apellido: apellido ? ILike(`%${apellido}%`) : undefined,
+      },
       relations: ['cursos'],
       skip: offset,
       take: limit,

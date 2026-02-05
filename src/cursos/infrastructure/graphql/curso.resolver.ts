@@ -4,15 +4,15 @@ import { EstudianteType } from '../../../estudiantes/infrastructure/graphql/estu
 import { CursoService } from '../../application/curso.service';
 import { Curso } from '../../domain/curso.entity';
 import { CreateCursoDto } from '../dto/create-curso.dto';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { FindCursosArgs } from '../dto/find-cursos.args';
 
 @Resolver(() => CursoType)
 export class CursoResolver {
   constructor(private readonly cursoService: CursoService) { }
 
   @Query(() => [CursoType], { name: 'cursos' })
-  async findAll(@Args() pagination: PaginationDto): Promise<Curso[]> {
-    return this.cursoService.findAllWithEstudiantes(pagination);
+  async findAll(@Args() args: FindCursosArgs): Promise<Curso[]> {
+    return this.cursoService.findAllWithEstudiantes(args);
   }
 
   @Query(() => CursoType, { name: 'curso' })
@@ -23,6 +23,11 @@ export class CursoResolver {
   @ResolveField('estudiantes', () => [EstudianteType])
   getEstudiantes(@Parent() curso: Curso): Curso['estudiantes'] {
     return curso.estudiantes ?? [];
+  }
+
+  @ResolveField('categoria', () => require('../../../categorias/infrastructure/graphql/categoria.type').CategoriaType)
+  getCategoria(@Parent() curso: Curso) {
+    return curso.categoria;
   }
 
   @Mutation(() => CursoType)

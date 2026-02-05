@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Curso } from '../domain/curso.entity';
 import { CursoRepositoryPort } from '../domain/curso.repository.port';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { FindCursosArgs } from './dto/find-cursos.args';
+import { CreateCursoDto } from './dto/create-curso.dto';
 
 @Injectable()
 export class CursoTypeormRepository extends CursoRepositoryPort {
@@ -14,29 +15,38 @@ export class CursoTypeormRepository extends CursoRepositoryPort {
     super();
   }
 
-  async findAll(pagination?: PaginationDto): Promise<Curso[]> {
-    const { limit = 10, offset = 0 } = pagination || {};
+  async findAll(args?: FindCursosArgs): Promise<Curso[]> {
+    const { limit = 10, offset = 0, nombre, categoriaId } = args || {};
     return this.repo.find({
+      where: {
+        nombre: nombre ? ILike(`%${nombre}%`) : undefined,
+        categoriaId: categoriaId || undefined,
+      },
+      relations: ['categoria'],
       skip: offset,
       take: limit,
     });
   }
 
-  async findAllWithEstudiantes(pagination?: PaginationDto): Promise<Curso[]> {
-    const { limit = 10, offset = 0 } = pagination || {};
+  async findAllWithEstudiantes(args?: FindCursosArgs): Promise<Curso[]> {
+    const { limit = 10, offset = 0, nombre, categoriaId } = args || {};
     return this.repo.find({
-      relations: ['estudiantes'],
+      where: {
+        nombre: nombre ? ILike(`%${nombre}%`) : undefined,
+        categoriaId: categoriaId || undefined,
+      },
+      relations: ['estudiantes', 'categoria'],
       skip: offset,
       take: limit,
     });
   }
 
   async findById(id: string): Promise<Curso | null> {
-    return this.repo.findOne({ where: { id }, relations: ['estudiantes'] });
+    return this.repo.findOne({ where: { id }, relations: ['estudiantes', 'categoria'] });
   }
 
-  async create(nombre: string): Promise<Curso> {
-    const curso = this.repo.create({ nombre });
+  async create(dto: CreateCursoDto): Promise<Curso> {
+    const curso = this.repo.create(dto);
     return this.repo.save(curso);
   }
 }

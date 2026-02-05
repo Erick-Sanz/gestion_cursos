@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './utils/database.module';
 import { EstudianteModule } from './estudiantes/estudiante.module';
 import { CursoModule } from './cursos/curso.module';
+import { CategoriaModule } from './categorias/categoria.module';
 import { SeedModule } from './utils/seed.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { SeedModule } from './utils/seed.module';
     }),
     EstudianteModule,
     CursoModule,
+    CategoriaModule,
     SeedModule,
   ],
   controllers: [AppController],

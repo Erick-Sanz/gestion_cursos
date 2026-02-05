@@ -1,12 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { EstudianteService } from '../estudiantes/application/estudiante.service';
 import { CursoService } from '../cursos/application/curso.service';
+import { CategoriaService } from '../categorias/application/categoria.service';
 
 @Injectable()
 export class SeedService implements OnModuleInit {
     constructor(
         private readonly estudianteService: EstudianteService,
         private readonly cursoService: CursoService,
+        private readonly categoriaService: CategoriaService,
     ) { }
 
     async onModuleInit() {
@@ -22,9 +24,24 @@ export class SeedService implements OnModuleInit {
 
         console.log('Iniciando seeding de datos de ejemplo...');
 
-        await this.cursoService.create({ nombre: 'Matemáticas Avanzadas' });
-        await this.cursoService.create({ nombre: 'Programación en NestJS' });
-        await this.cursoService.create({ nombre: 'Bases de Datos' });
+        // Seed categories first
+        const cienciasExactas = await this.categoriaService.create('Ciencias Exactas');
+        const tecnologia = await this.categoriaService.create('Tecnología');
+        const humanidades = await this.categoriaService.create('Humanidades');
+
+        // Seed courses with category IDs
+        await this.cursoService.create({
+            nombre: 'Matemáticas Avanzadas',
+            categoriaId: cienciasExactas.id,
+        });
+        await this.cursoService.create({
+            nombre: 'Programación en NestJS',
+            categoriaId: tecnologia.id,
+        });
+        await this.cursoService.create({
+            nombre: 'Bases de Datos',
+            categoriaId: tecnologia.id,
+        });
 
         await this.estudianteService.create({
             nombre: 'Juan',

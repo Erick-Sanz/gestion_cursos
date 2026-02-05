@@ -3,18 +3,18 @@ import { EstudianteRepositoryPort } from '../domain/estudiante.repository.port';
 import { Estudiante } from '../domain/estudiante.entity';
 import { CreateEstudianteDto } from '../infrastructure/dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from '../infrastructure/dto/update-estudiante.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { FindEstudiantesArgs } from '../infrastructure/dto/find-estudiantes.args';
 
 @Injectable()
 export class EstudianteService {
   constructor(private readonly repository: EstudianteRepositoryPort) { }
 
-  async findAll(pagination?: PaginationDto): Promise<Estudiante[]> {
-    return this.repository.findAll(pagination);
+  async findAll(args?: FindEstudiantesArgs): Promise<Estudiante[]> {
+    return this.repository.findAll(args);
   }
 
-  async findAllWithCursos(pagination?: PaginationDto): Promise<Estudiante[]> {
-    return this.repository.findAllWithCursos(pagination);
+  async findAllWithCursos(args?: FindEstudiantesArgs): Promise<Estudiante[]> {
+    return this.repository.findAllWithCursos(args);
   }
 
   async findById(id: string): Promise<Estudiante> {

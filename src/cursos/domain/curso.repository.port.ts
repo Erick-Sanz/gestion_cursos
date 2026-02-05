@@ -1,9 +1,10 @@
 import { Curso } from './curso.entity';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { FindCursosArgs } from '../infrastructure/dto/find-cursos.args';
+import { CreateCursoDto } from '../infrastructure/dto/create-curso.dto';
 
 export abstract class CursoRepositoryPort {
-  abstract findAll(pagination?: PaginationDto): Promise<Curso[]>;
-  abstract findAllWithEstudiantes(pagination?: PaginationDto): Promise<Curso[]>;
+  abstract findAll(args?: FindCursosArgs): Promise<Curso[]>;
+  abstract findAllWithEstudiantes(args?: FindCursosArgs): Promise<Curso[]>;
   abstract findById(id: string): Promise<Curso | null>;
-  abstract create(nombre: string): Promise<Curso>;
+  abstract create(dto: CreateCursoDto): Promise<Curso>;
 }

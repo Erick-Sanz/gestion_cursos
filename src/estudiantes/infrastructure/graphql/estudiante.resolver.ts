@@ -4,15 +4,15 @@ import { CursoType } from '../../../cursos/infrastructure/graphql/curso.type';
 import { EstudianteService } from '../../application/estudiante.service';
 import { Estudiante } from '../../domain/estudiante.entity';
 import { CreateEstudianteDto } from '../dto/create-estudiante.dto';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { FindEstudiantesArgs } from '../dto/find-estudiantes.args';
 
 @Resolver(() => EstudianteType)
 export class EstudianteResolver {
   constructor(private readonly estudianteService: EstudianteService) { }
 
   @Query(() => [EstudianteType], { name: 'estudiantes' })
-  async findAll(@Args() pagination: PaginationDto): Promise<Estudiante[]> {
-    return this.estudianteService.findAllWithCursos(pagination);
+  async findAll(@Args() args: FindEstudiantesArgs): Promise<Estudiante[]> {
+    return this.estudianteService.findAllWithCursos(args);
   }
 
   @Query(() => EstudianteType, { name: 'estudiante' })
