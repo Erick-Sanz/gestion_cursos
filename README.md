@@ -3,6 +3,9 @@
 Sistema con API REST y GraphQL para la gestión de estudiantes, cursos y categorías, construida con NestJS, TypeORM y PostgreSQL, TypeScript, Arquitectura hexagonal, clean code.
 El proyecto se desplego en render al ser una opcion gratuita para desplegar.
 En el motor de base de datos se utilizo neon db.
+La url de la api es: https://gestion-cursos.onrender.com
+La url de la documentacion de swagger es: https://gestion-cursos.onrender.com/api
+La url del playground de graphql es: https://gestion-cursos.onrender.com/graphql
 
 ## 📋 Descripción
 
