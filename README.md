@@ -1,6 +1,8 @@
 # Sistema de Gestión de Cursos
 
 Sistema con API REST y GraphQL para la gestión de estudiantes, cursos y categorías, construida con NestJS, TypeORM y PostgreSQL, TypeScript, Arquitectura hexagonal, clean code.
+El proyecto se desplego en render al ser una opcion gratuita para desplegar.
+En el motor de base de datos se utilizo neon db.
 
 ## 📋 Descripción
 
@@ -540,22 +542,8 @@ Para reiniciar los datos, elimina la base de datos y vuelve a crearla.
 - **Validación**: class-validator, class-transformer
 - **Documentación**: Swagger/OpenAPI
 
-## 📝 Scripts Disponibles
 
-```bash
-npm run start          # Iniciar en modo normal
-npm run start:dev      # Iniciar en modo desarrollo (watch)
-npm run build          # Compilar el proyecto
-npm run format         # Formatear código con Prettier
-npm run lint           # Ejecutar ESLint
-```
 
-## 🤝 Contribución
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
 
 
