@@ -20,6 +20,7 @@ import { SeedModule } from './utils/seed.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      introspection: true,
       playground: true,
       formatError: (error) => {
         const graphQLFormattedError = {

@@ -9,6 +9,7 @@ export class PaginationDto {
         description: 'Number of items to return',
         default: 10,
         minimum: 1,
+        example: 10,
     })
     @Field(() => Int, { defaultValue: 10, nullable: true })
     @IsOptional()
@@ -21,6 +22,7 @@ export class PaginationDto {
         description: 'Number of items to skip',
         default: 0,
         minimum: 0,
+        example: 0,
     })
     @Field(() => Int, { defaultValue: 0, nullable: true })
     @IsOptional()

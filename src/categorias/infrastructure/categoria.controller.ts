@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { CategoriaService } from '../application/categoria.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
+import { Categoria } from '../domain/categoria.entity';
 
 @ApiTags('Categorias')
 @Controller('categorias')
@@ -23,7 +24,7 @@ export class CategoriaController {
 
     @Get()
     @ApiOperation({ summary: 'Obtener todas las categorías' })
-    @ApiResponse({ status: 200, description: 'Lista de categorías' })
+    @ApiResponse({ status: 200, description: 'Lista de categorías', type: [Categoria] })
     findAll() {
         return this.categoriaService.findAll();
     }
@@ -31,7 +32,7 @@ export class CategoriaController {
     @Get(':id')
     @ApiOperation({ summary: 'Obtener una categoría por ID' })
     @ApiParam({ name: 'id', description: 'UUID de la categoría' })
-    @ApiResponse({ status: 200, description: 'Categoría encontrada' })
+    @ApiResponse({ status: 200, description: 'Categoría encontrada', type: Categoria })
     @ApiResponse({ status: 404, description: 'Categoría no encontrada' })
     findById(@Param('id', ParseUUIDPipe) id: string) {
         return this.categoriaService.findById(id);
@@ -39,7 +40,7 @@ export class CategoriaController {
 
     @Post()
     @ApiOperation({ summary: 'Crear una nueva categoría' })
-    @ApiResponse({ status: 201, description: 'Categoría creada exitosamente' })
+    @ApiResponse({ status: 201, description: 'Categoría creada exitosamente', type: Categoria })
     @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
     create(@Body() dto: CreateCategoriaDto) {
         return this.categoriaService.create(dto.nombre);
@@ -48,7 +49,7 @@ export class CategoriaController {
     @Delete(':id')
     @ApiOperation({ summary: 'Eliminar una categoría' })
     @ApiParam({ name: 'id', description: 'UUID de la categoría' })
-    @ApiResponse({ status: 200, description: 'Categoría eliminada exitosamente' })
+    @ApiResponse({ status: 200, description: 'Categoría eliminada exitosamente', type: Categoria })
     @ApiResponse({ status: 404, description: 'Categoría no encontrada' })
     remove(@Param('id', ParseUUIDPipe) id: string) {
         return this.categoriaService.delete(id);

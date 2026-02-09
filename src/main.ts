@@ -3,6 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { EstudianteType } from './estudiantes/infrastructure/graphql/estudiante.type';
+import { CursoType } from './cursos/infrastructure/graphql/curso.type';
+import { CategoriaType } from './categorias/infrastructure/graphql/categoria.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,7 +34,9 @@ async function bootstrap() {
     .addTag('cursos')
     .addTag('categorias')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    extraModels: [EstudianteType, CursoType, CategoriaType],
+  });
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
